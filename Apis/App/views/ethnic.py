@@ -6,7 +6,7 @@ from App.commons.response.read import ResponseRead
 
 class EthnicView:
     @api_view(['GET'])
-    def get_ethnics(request):
+    def find_all(request):
         ethnics = Ethnic.objects.all()
         serializer = EthnicSerializer(ethnics, many=True)
 
@@ -16,4 +16,10 @@ class EthnicView:
         )
         return response.to_response()
     
-            
+    @api_view(['GET'])
+    def find_one(request, pk):
+        print(1)
+        # ethnic = Ethnic.objects.get(pk=pk)
+
+        # serializer = EthnicSerializer(ethnic)
+        # return Response(serializer.data)
