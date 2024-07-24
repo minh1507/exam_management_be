@@ -5,6 +5,10 @@ name = "pypi"
 
 [packages]
 django = "*"
+django-seed = "*"
+pymysql = "*"
+drf-yasg = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 
