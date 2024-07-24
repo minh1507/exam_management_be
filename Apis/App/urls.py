@@ -4,5 +4,5 @@ from .swagger import swaggerRouter
 
 urlpatterns = [
     path('apis/', include(swaggerRouter)), 
-    path('ethnic/', include(ethnicRouter)), 
+    path('api/', include(ethnicRouter)), 
 ]

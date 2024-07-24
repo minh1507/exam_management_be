@@ -1,7 +1,10 @@
-from django.urls import path
-from ..views.ethnic import EthnicView
+from django.urls import include, path
+from rest_framework import routers
+from App.views import EthnicView
+
+router = routers.DefaultRouter()
+router.register(r'ethnic',EthnicView,basename="ethnic")
 
 ethnicRouter = [
-    path('', EthnicView.find_all, name='get_ethnics'),
-    path('<int:pk>/', EthnicView.find_one, name='get_ethnic'),
+    path('', include(router.urls)),
 ]

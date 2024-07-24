@@ -66,7 +66,7 @@ def run():
         new_code = record['code']
 
         # Try to find the record with the given ID and update or create it
-        password_record, created = Ethnic.objects.update_or_create(
+        ethnic_record, created = Ethnic.objects.update_or_create(
             id=record_id,
             defaults={'name': new_name, 'code': new_code}
         )

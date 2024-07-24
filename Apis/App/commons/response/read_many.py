@@ -1,8 +1,9 @@
 from rest_framework.response import Response
-from ..enum.reponse import ReponseEnum
-from ..message.response import ResponseMessage
-class ResponseRead:
-    def __init__(self, data, status:int=ReponseEnum.SUCCESS.value, message:list=[ResponseMessage.FIND_ALL_SUCCESS].value, total_count=None, toast=False):
+from App.commons.enum import ReponseEnum
+from App.commons.message import ResponseMessage
+
+class ResponseReadMany:
+    def __init__(self, data, status=ReponseEnum.SUCCESS.value, message=[ResponseMessage.FIND_ALL_SUCCESS.value], total_count=None, toast=False):
         self.data = data
         self.status = status
         self.message = message

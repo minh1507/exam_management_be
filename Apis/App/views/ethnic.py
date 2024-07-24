@@ -1,25 +1,43 @@
-from ..serializers.ethnic import EthnicSerializer
-from ..models.ethnic import Ethnic
-from rest_framework.decorators import api_view
-from ..models.ethnic import Ethnic
-from App.commons.response.read import ResponseRead
+from rest_framework import viewsets
+from App.models.ethnic import Ethnic
+from App.serializers.ethnic import EthnicSerializer, EthnicValidate
+from App.commons.response import ResponseReadMany, ResponseReadOne, ResponseCreateOne
+from App.commons.enum import ReponseEnum
 
-class EthnicView:
-    @api_view(['GET'])
-    def find_all(request):
+class EthnicView(viewsets.ModelViewSet):
+    serializer_class = EthnicSerializer
+
+    def list(self, request, pk=None):
         ethnics = Ethnic.objects.all()
         serializer = EthnicSerializer(ethnics, many=True)
-
-        response = ResponseRead(
+        response = ResponseReadMany(
             data=serializer.data,
             total_count=len(serializer.data)
         )
         return response.to_response()
     
-    @api_view(['GET'])
-    def find_one(request, pk):
-        print(1)
-        # ethnic = Ethnic.objects.get(pk=pk)
+    # def find_one(request, pk):
+    #     ethnic = Ethnic.objects.get(pk=pk)
+    #     serializer = GetEthnicSerializer(ethnic)
+    #     response = ResponseReadOne(
+    #         data=serializer.data,
+    #     )
+    #     return response.to_response()
+    
+    def create(self, request):
+        serializer = EthnicSerializer(data=request.data)
+        messages = EthnicValidate.run(request.data)
 
-        # serializer = EthnicSerializer(ethnic)
-        # return Response(serializer.data)
+        response = ResponseCreateOne(
+            data=request.data,
+            toast=True
+        )
+
+        if serializer.is_valid() and len(messages)==0:
+            serializer.save()
+        else:
+            response.message = messages
+            response.status = ReponseEnum.BAD_REQUEST.value
+            
+        return response.to_response()  
+        

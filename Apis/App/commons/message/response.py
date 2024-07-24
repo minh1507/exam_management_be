@@ -8,3 +8,7 @@ class ResponseMessage(Enum):
     # find one
     FIND_ONE_SUCCESS = "Find one successfully"
     FIND_ONE_FAILED = "Find one failed"
+
+    # create one
+    CREATE_ONE_SUCCESS = "Create one successfully"
+    CREATE_ONE_FAILED = "Create one failed"

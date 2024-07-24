@@ -37,8 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_seed',
-    'rest_framework',
     'drf_yasg',
+    'corsheaders',
     'App'
 ]
 
@@ -50,6 +50,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:4200',
 ]
 
 ROOT_URLCONF = 'Apis.urls'
@@ -85,7 +91,7 @@ DATABASES = {
         'USER': 'root',
         'PASSWORD': '123456',
         'HOST': '127.0.0.1',
-        'PORT': '3306'
+        'PORT': '1024'
     }
 }
 
