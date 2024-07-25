@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .routers.ethnic import ethnicRouter
+from .routers import ethnicRouter
 from .swagger import swaggerRouter
 
 urlpatterns = [

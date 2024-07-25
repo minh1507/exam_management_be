@@ -1,5 +1,6 @@
 from enum import Enum
 
 class ContentMessage(Enum):
-    EXISTED = "existed",
+    EXISTED = "existed"
     REQUIRED = "required"
+    INVALID = 'invalid'

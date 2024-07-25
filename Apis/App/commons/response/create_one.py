@@ -3,16 +3,16 @@ from App.commons.enum import ReponseEnum
 from App.commons.message import ResponseMessage
 
 class ResponseCreateOne:
-    def __init__(self, data, status=ReponseEnum.SUCCESS.value, message=[ResponseMessage.CREATE_ONE_SUCCESS.value], toast=False):
+    def __init__(self, data=None, status=ReponseEnum.SUCCESS.value, messages=[ResponseMessage.CREATE_SUCCESS.value], toast=False):
         self.data = data
         self.status = status
-        self.message = message
+        self.messages = messages
         self.toast = toast
 
     def to_response(self):
         response_data = {
             "status": self.status,
-            "message": self.message,
+            "messages": self.messages,
             "data": self.data,
             "toast": self.toast
         }

@@ -7,6 +7,7 @@ class Base(models.Model):
     updatedAt = models.DateTimeField(auto_now=True)
     deletedAt = models.DateTimeField(null=True, blank=True, default=None)
     isFreeze = models.BooleanField(default=False)
+    isActivate = models.BooleanField(default=True)
     
     class Meta:
         abstract = True

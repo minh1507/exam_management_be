@@ -3,17 +3,17 @@ from App.commons.enum import ReponseEnum
 from App.commons.message import ResponseMessage
 
 class ResponseReadMany:
-    def __init__(self, data, status=ReponseEnum.SUCCESS.value, message=[ResponseMessage.FIND_ALL_SUCCESS.value], total_count=None, toast=False):
+    def __init__(self, data, status=ReponseEnum.SUCCESS.value, messages=[ResponseMessage.FIND_SUCCESS.value], total_count=None, toast=False):
         self.data = data
         self.status = status
-        self.message = message
+        self.messages = messages
         self.total_count = total_count
         self.toast = toast
 
     def to_response(self):
         response_data = {
             "status": self.status,
-            "message": self.message,
+            "messages": self.messages,
             "data": self.data,
             "toast": self.toast
         }
