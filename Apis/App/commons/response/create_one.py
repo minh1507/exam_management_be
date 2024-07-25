@@ -3,7 +3,7 @@ from App.commons.enum import ReponseEnum
 from App.commons.message import ResponseMessage
 
 class ResponseCreateOne:
-    def __init__(self, data=None, status=ReponseEnum.SUCCESS.value, messages=[ResponseMessage.CREATE_SUCCESS.value], toast=False):
+    def __init__(self, data=None, status=ReponseEnum.CREATE.value, messages=[ResponseMessage.CREATE_SUCCESS.value], toast=False):
         self.data = data
         self.status = status
         self.messages = messages

@@ -1,9 +1,8 @@
 from rest_framework import viewsets, mixins
-from App.models.ethnic import Ethnic
-from App.serializers.ethnic import EthnicSerializer, EthnicValidate
+from App.models import Ethnic
+from App.serializers import EthnicSerializer, EthnicValidate, EthnicDeleteSerializer
 from App.commons.response import ResponseReadMany, ResponseReadOne, ResponseCreateOne, ResponseDestroyOne
 from App.commons.enum import ReponseEnum
-import copy
 class EthnicView(
     mixins.CreateModelMixin,
     mixins.ListModelMixin,
@@ -77,7 +76,7 @@ class EthnicView(
         if len(messages) == 0:
             ethnic = Ethnic.objects.get(pk=pk)
             Ethnic.delete(ethnic)
-            serializer = EthnicSerializer(ethnic)
+            serializer = EthnicDeleteSerializer(ethnic)
             response.data=serializer.data,
             response.toast = True
         else:

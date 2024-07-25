@@ -6,7 +6,12 @@ from App.commons.util import StringUtil
 class EthnicSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Ethnic
-        fields = ('id', 'name', 'code', 'isActivate')
+        fields = ('id', 'name', 'code')
+
+class EthnicDeleteSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Ethnic
+        fields = ('id', 'deletedAt')
 
 class EthnicValidate():
     def run(value, type):
@@ -15,13 +20,13 @@ class EthnicValidate():
             case "create":
                 if value.get('name') is None or value.get('name') == "":
                     messages.push(ContentMessage.REQUIRED.value, KeyMessage.NAME.value)
-                if (value.get('name')).isnumeric() == True:
+                if value.get('name') is not None and (value.get('name')).isnumeric() == True:
                     messages.push(ContentMessage.INVALID.value, KeyMessage.NAME.value)
                 if Ethnic.objects.filter(name=value.get('name')).exists():
                     messages.push(ContentMessage.EXISTED.value, KeyMessage.NAME.value)
                 if value.get('code') is None or value.get('code') == "":
                     messages.push(ContentMessage.REQUIRED.value, KeyMessage.CODE.value)
-                if (value.get('code')).isnumeric() == True:
+                if value.get('code') is not None and (value.get('code')).isnumeric() == True:
                     messages.push(ContentMessage.INVALID.value, KeyMessage.CODE.value)
                 return messages.get()
             case "pk":

@@ -76,6 +76,18 @@ TEMPLATES = [
     },
 ]
 
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': False,
+    'SECURITY_DEFINITIONS': {
+        'Token': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    },
+}
+
+
 WSGI_APPLICATION = 'Apis.wsgi.application'
 
 
@@ -136,6 +148,4 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-SWAGGER_SETTINGS = {
-   'USE_SESSION_AUTH': False
-}
+PASSWORD_HASH_KEY = '123456'

@@ -9,6 +9,7 @@ django-seed = "*"
 pymysql = "*"
 drf-yasg = "*"
 django-cors-headers = "*"
+djangorestframework = "*"
 
 [dev-packages]
 

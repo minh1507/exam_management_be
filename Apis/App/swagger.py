@@ -6,7 +6,6 @@ schema_view = get_schema_view(
     openapi.Info(
         title="Final project",
         default_version='v1.0',
-        
     ),
     public=True,
 )
