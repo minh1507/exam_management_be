@@ -5,3 +5,4 @@ class ResponseMessage(Enum):
     CREATE_SUCCESS = "success.create"
     DESTROY_SUCCESS = "success.destroy"
     REGISTER_SUCCESS = "success.register"
+    LOGIN_SUCCESS = "success.login"

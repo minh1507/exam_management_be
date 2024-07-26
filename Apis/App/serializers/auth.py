@@ -6,7 +6,7 @@ from App.commons.util import StringUtil
 
 class AuthSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=50)
-    password = serializers.CharField(max_length=500)
+    password = serializers.CharField(max_length=50)
 
     def to_data(self):
             return self.data
@@ -26,28 +26,30 @@ class PasswordSerializer(serializers.HyperlinkedModelSerializer):
         return instance.id
 
 class RegisterValidate():
-    def run(value, type):
+    def run(value):
         messages = MessageUtil()
-        match type:
-            case "create":
-                if value.get('username') is None or value.get('username') == "":
-                    messages.push(ContentMessage.REQUIRED.value, KeyMessage.USERNAME.value)
-                if value.get('username') is not None and (value.get('username')).isnumeric() == True:
-                    messages.push(ContentMessage.INVALID.value, KeyMessage.USERNAME.value)
-                if value.get('username') is not None and len(value.get('username'))<6:
-                    messages.push(ContentMessage.INVALID_USERNAME.value, KeyMessage.USERNAME.value)
-                if User.objects.filter(username=value.get('username')).exists():
-                    messages.push(ContentMessage.EXISTED.value, KeyMessage.USERNAME.value)
-                if value.get('password') is None or value.get('password') == "":
-                    messages.push(ContentMessage.REQUIRED.value, KeyMessage.PASSWORD.value)
-                if value.get('password') is not None and StringUtil.validate_password(value.get('password')) != True:
-                    messages.push(ContentMessage.INVALID_PASSWORD.value, KeyMessage.PASSWORD.value)
-                return messages.get()
-            case "pk":
-                if value.isnumeric() == True:
-                    messages.push(ContentMessage.INVALID.value, KeyMessage.ID.value)
-                if StringUtil.is_valid_uuid(value) == False:
-                    messages.push(ContentMessage.INVALID.value, KeyMessage.ID.value)
-                return messages.get()
+        if value.get('username') is None or value.get('username') == "":
+            messages.push(ContentMessage.REQUIRED.value, KeyMessage.USERNAME.value)
+        if value.get('username') is not None and (value.get('username')).isnumeric() == True:
+            messages.push(ContentMessage.INVALID.value, KeyMessage.USERNAME.value)
+        if value.get('username') is not None and len(value.get('username'))<6:
+            messages.push(ContentMessage.INVALID_USERNAME.value, KeyMessage.USERNAME.value)
+        if User.objects.filter(username=value.get('username')).exists():
+            messages.push(ContentMessage.EXISTED.value, KeyMessage.USERNAME.value)
+        if value.get('password') is None or value.get('password') == "":
+            messages.push(ContentMessage.REQUIRED.value, KeyMessage.PASSWORD.value)
+        if value.get('password') is not None and StringUtil.validate_password(value.get('password')) != True:
+            messages.push(ContentMessage.INVALID_PASSWORD.value, KeyMessage.PASSWORD.value)
+        return messages.get()
+                
+class LoginValidate():
+    def run(value):
+        messages = MessageUtil()
+        if value.get('username') is None or value.get('username') == "":
+            messages.push(ContentMessage.REQUIRED.value, KeyMessage.USERNAME.value)
+        if value.get('password') is None or value.get('password') == "":
+            messages.push(ContentMessage.REQUIRED.value, KeyMessage.PASSWORD.value)
+        return messages.get()
+        
                 
         

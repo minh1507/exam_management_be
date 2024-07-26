@@ -1,7 +1,7 @@
 from rest_framework import viewsets, mixins
 from App.models import Ethnic
 from App.serializers import EthnicSerializer, EthnicValidate, EthnicDeleteSerializer
-from App.commons.response import ResponseReadMany, ResponseReadOne, ResponseCreateOne, ResponseDestroyOne
+from App.commons.response import ResponseReadMany, ResponseReadOne, ResponseCreateOne, ResponseDestroyOne, ResponseBadRequest
 from App.commons.enum import ReponseEnum
 class EthnicView(
     mixins.CreateModelMixin,
@@ -17,11 +17,10 @@ class EthnicView(
         ethnics = Ethnic.objects.all()
         serializer = EthnicSerializer(ethnics, many=True)
 
-        response = ResponseReadMany(
+        return ResponseReadMany(
             data=serializer.data,
             total_count=len(serializer.data)
-        )
-        return response.to_response()
+        ).to_response()
     
     def retrieve(self, request, pk):
         messages = EthnicValidate.run(pk, 'pk')
