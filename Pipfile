@@ -10,6 +10,9 @@ pymysql = "*"
 drf-yasg = "*"
 django-cors-headers = "*"
 djangorestframework = "*"
+django-environ = "*"
+setuptools = "*"
+djangorestframework-simplejwt = "*"
 
 [dev-packages]
 

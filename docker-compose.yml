@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: 10000s
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: project
+      TZ: Asia/Saigon
+    ports:
+      - "10000:3306"
+    volumes:
+      - /home/project/storage/mysql:/var/lib/mysql
+    networks:
+      - local
+  web:
+    build:
+      context: . 
+      dockerfile: Dockerfile
+    environment:
+      DB_HOST: 10000s
+      DB_PORT: 3306
+    ports:
+      - "3000:3000"
+    networks:
+      - local
+networks:
+  local:
+    external: true
