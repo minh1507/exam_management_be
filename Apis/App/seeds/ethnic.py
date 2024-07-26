@@ -39,25 +39,15 @@ def run():
     {'id': 34, 'name': 'Bana', 'code': 'BANA'},
     {'id': 35, 'name': 'Ngái', 'code': 'NGAI'},
     {'id': 36, 'name': 'Phu La', 'code': 'PHU_LA'},
-    {'id': 37, 'name': 'Kinh', 'code': 'KINH'},
+    {'id': 37, 'name': 'Si La', 'code': 'SI_LA'},  # Corrected
     {'id': 38, 'name': 'Lô Lô', 'code': 'LO_LO'},
     {'id': 39, 'name': 'Chơ Ro', 'code': 'CHO_RO'},
-    {'id': 40, 'name': 'Tày', 'code': 'TAY'},
-    {'id': 41, 'name': 'Kháng', 'code': 'KHANG'},
-    {'id': 42, 'name': 'Dê', 'code': 'DE'},
-    {'id': 43, 'name': 'Lục', 'code': 'LUC'},
-    {'id': 44, 'name': 'Yao', 'code': 'YAO'},
-    {'id': 45, 'name': 'Cao Lan', 'code': 'CAO_LAN'},
-    {'id': 46, 'name': 'Lô Lô', 'code': 'LO_LO'},
-    {'id': 47, 'name': 'Tày', 'code': 'TAY'},
-    {'id': 48, 'name': 'Xinh Mun', 'code': 'XINH_MUN'},
-    {'id': 49, 'name': 'Mường', 'code': 'MUONG'},
-    {'id': 50, 'name': 'Rơ Măm', 'code': 'RO_MAM'},
-    {'id': 51, 'name': 'Ngái', 'code': 'NGAI'},
-    {'id': 52, 'name': 'Tà Ôi', 'code': 'TA_OI'},
-    {'id': 53, 'name': 'Tày', 'code': 'TAY'},
-    {'id': 54, 'name': 'H’Mong', 'code': 'HMONG'}
-        # Add more records as needed
+    {'id': 40, 'name': 'Kháng', 'code': 'KHANG'},
+    {'id': 41, 'name': 'Dê', 'code': 'DE'},
+    {'id': 42, 'name': 'Lục', 'code': 'LUC'},
+    {'id': 43, 'name': 'Yao', 'code': 'YAO'},
+    {'id': 44, 'name': 'Cao Lan', 'code': 'CAO_LAN'},
+    {'id': 45, 'name': 'Rơ Măm', 'code': 'RO_MAM'}
     ]
     
     for record in records:

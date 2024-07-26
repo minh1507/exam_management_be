@@ -3,7 +3,7 @@ import importlib.util
 import os
 
 class Command(BaseCommand):
-    help = 'Run seeds from the seeds folder'
+    help = 'Run seeds'
 
     def handle(self, *args, **kwargs):
         seeds_folder = os.path.join(os.path.dirname(__file__), '..', '..', 'seeds')
@@ -22,4 +22,4 @@ class Command(BaseCommand):
                 if hasattr(module, 'run'):
                     module.run()
 
-        self.stdout.write(self.style.SUCCESS('Successfully ran seeds from the seeds folder'))
+        self.stdout.write(self.style.SUCCESS('Run seed success'))

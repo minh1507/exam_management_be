@@ -1,16 +1,19 @@
 from django.urls import path
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+import environ
+env = environ.Env()
+environ.Env.read_env()
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Final project",
-        default_version='v1.0',
+        title=env("SWAGGER_TITLE"),
+        default_version=env("SWAGGER_VERSION"),
     ),
     public=True,
 )
 
 swaggerRouter = [
-    path('', schema_view.with_ui('swagger', cache_timeout=0),
+    path('', schema_view.with_ui('swagger', cache_timeout=env("SWAGGER_CACHE_TIMEOUT")),
          name='schema-swagger-ui'),
 ]
