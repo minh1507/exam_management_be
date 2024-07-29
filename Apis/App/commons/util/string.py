@@ -25,3 +25,5 @@ class StringUtil:
         if match:
             return match.group(1)
         return None
+    def messages(key,content):
+        return content + '.' + key

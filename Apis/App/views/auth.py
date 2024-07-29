@@ -1,13 +1,16 @@
 from rest_framework import viewsets
-from App.models import Password, User
-from App.serializers import AuthSerializer,RegisterValidate,UserSerializer,PasswordSerializer,LoginValidate
+from App.models import Password, User, Profile
+from App.serializers import AuthSerializer,RegisterValidate,UserSerializer,PasswordSerializer,LoginValidate,ProfileSerializer
 from App.commons.response import ResponseCreateOne, ResponseBadRequest
 from App.commons.enum import ReponseEnum
 from rest_framework.decorators import action
 from App.commons.util import StringUtil
 from App.commons.message import ResponseMessage
 from App.commons.message import KeyMessage, ContentMessage
-from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
+from django.utils import timezone
+from datetime import timedelta
+import uuid
+import jwt
 
 class AuthView(
     viewsets.GenericViewSet
@@ -26,15 +29,25 @@ class AuthView(
         existUser = User.objects.select_related('password').filter(username=dataSerializer.data.get('username')).first()
         
         if(existUser is None):
-            return ResponseBadRequest(messages=[ContentMessage.NOT_EXISTED.value + '.' + KeyMessage.USERNAME.value]).to_response() 
+            return ResponseBadRequest(messages=[StringUtil.messages(KeyMessage.USERNAME.value, ContentMessage.NOT_EXISTED.value)]).to_response() 
   
         if(StringUtil.compare_passwords(existUser.password.hash, dataSerializer.data.get('password')) == False):
-            return ResponseBadRequest(messages=[ContentMessage.WRONG.value + '.' + KeyMessage.PASSWORD.value]).to_response() 
+            return ResponseBadRequest(messages=[StringUtil.messages(KeyMessage.PASSWORD.value, ContentMessage.WRONG.value)]).to_response() 
         
-        refresh = AccessToken.for_user(existUser)
-        print(refresh)
+        payload = {
+            "idp": str(uuid.uuid4()),
+            "username": existUser.username,
+            "iat": timezone.now(),
+            "exp": timezone.now() + timedelta(1)
+        }
 
-        return ResponseCreateOne(messages=[ResponseMessage.LOGIN_SUCCESS.value], toast=True, status=ReponseEnum.SUCCESS.value).to_response()
+        data = dict()
+        data["accessToken"] = jwt.encode(payload, "123", algorithm='HS256')
+
+        payload['exp'] = timezone.now() + timedelta(365)
+        data["refreshToken"] = jwt.encode(payload, "123", algorithm='HS256')
+
+        return ResponseCreateOne(messages=[ResponseMessage.LOGIN_SUCCESS.value], data=data, toast=True, status=ReponseEnum.SUCCESS.value).to_response()
     
     @action(detail=False, methods=['post'], serializer_class=AuthSerializer)
     def register(self, request):
@@ -61,6 +74,12 @@ class AuthView(
      
         if userSerializer.is_valid():
             userSerializer.save()
+
+        profileSerializer = ProfileSerializer(data={"firstname": "New user"})
+
+        if profileSerializer.is_valid():
+            profileSerializer.save()
+            
         return ResponseCreateOne(messages=[ResponseMessage.REGISTER_SUCCESS.value], status=ReponseEnum.CREATE.value, toast=True, data={"username": request.data.get("username")}).to_response()
    
         

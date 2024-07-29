@@ -1,3 +1,4 @@
+from .ethnic import Ethnic
 from django.db import models
 from .base import Base
 import uuid
@@ -9,3 +10,4 @@ class Profile(Base):
     middlename = models.CharField(max_length=10, null=True)
     email = models.CharField(max_length=50, unique=True, null=True)
     age = models.PositiveIntegerField(null=True)
+    ethnic = models.OneToOneField(Ethnic, on_delete=models.CASCADE, null=True)

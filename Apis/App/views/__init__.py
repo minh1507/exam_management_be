@@ -1,2 +1,3 @@
 from .ethnic import *
 from .auth import *
+from .role import *

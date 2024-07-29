@@ -134,3 +134,6 @@ DATABASES = {
         'PORT': env("DB_PORT")
     }
 }
+
+
+SECRET_KEY = "123456"
