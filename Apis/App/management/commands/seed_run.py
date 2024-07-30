@@ -8,7 +8,9 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         seeds_folder = os.path.join(os.path.dirname(__file__), '..', '..', 'seeds')
 
-        for filename in os.listdir(seeds_folder):
+        arr = os.listdir(seeds_folder)
+        arr.reverse()
+        for filename in arr:
             if filename.endswith('.py') and filename != '__init__.py':
                 module_name = filename[:-3]  # Strip .py extension
                 module_path = os.path.join(seeds_folder, filename)
