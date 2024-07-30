@@ -11,7 +11,9 @@ from django.utils import timezone
 from datetime import timedelta
 import uuid
 import jwt
-
+import environ
+env = environ.Env()
+environ.Env.read_env()
 class AuthView(
     viewsets.GenericViewSet
     ):
@@ -26,8 +28,8 @@ class AuthView(
             return ResponseBadRequest(messages).to_response() 
         
         dataSerializer = AuthSerializer(request.data)
-        existUser = User.objects.select_related('password').filter(username=dataSerializer.data.get('username')).first()
-        
+        existUser = User.objects.select_related('password').select_related('role').filter(username=dataSerializer.data.get('username')).first()
+        print(existUser.role.name)
         if(existUser is None):
             return ResponseBadRequest(messages=[StringUtil.messages(KeyMessage.USERNAME.value, ContentMessage.NOT_EXISTED.value)]).to_response() 
   
@@ -36,16 +38,23 @@ class AuthView(
         
         payload = {
             "idp": str(uuid.uuid4()),
-            "username": existUser.username,
+            "data": {
+                "user": {
+                    "username": existUser.username
+                },
+                "role": {
+                    "code": existUser.role.code
+                }
+            },
             "iat": timezone.now(),
             "exp": timezone.now() + timedelta(1)
         }
 
         data = dict()
-        data["accessToken"] = jwt.encode(payload, "123", algorithm='HS256')
+        data["accessToken"] = jwt.encode(payload, env("ACCESS_TOKEN_KEY"), algorithm='HS256')
 
         payload['exp'] = timezone.now() + timedelta(365)
-        data["refreshToken"] = jwt.encode(payload, "123", algorithm='HS256')
+        data["refreshToken"] = jwt.encode(payload, env("REFRESH_TOKEN_KEY"), algorithm='HS256')
 
         return ResponseCreateOne(messages=[ResponseMessage.LOGIN_SUCCESS.value], data=data, toast=True, status=ReponseEnum.SUCCESS.value).to_response()
     
@@ -69,6 +78,7 @@ class AuthView(
         account = dict()
         account["username"] = dataSerializer.to_data().get("username")
         account["password"] = str(resultPassword)
+        account['role'] = "00000000000000000000000000000001"
 
         userSerializer = UserSerializer(data=account)
      
