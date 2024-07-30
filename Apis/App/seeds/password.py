@@ -1,19 +1,16 @@
 from App.models.password import Password
 
 def run():
-    # Define the array of records to insert or update
     records = [
         {'id': 1, 'hash': '123'},
         {'id': 2, 'hash': '456'},
         {'id': 3, 'hash': '789'},
-        # Add more records as needed
     ]
     
     for record in records:
         record_id = record['id']
         new_hash = record['hash']
         
-        # Try to find the record with the given ID and update or create it
         password_record, created = Password.objects.update_or_create(
             id=record_id,
             defaults={'hash': new_hash}

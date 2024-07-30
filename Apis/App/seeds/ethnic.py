@@ -1,7 +1,6 @@
 from App.models.ethnic import Ethnic
 
 def run():
-    # Define the array of records to insert or update
     records = [
     {'id': 1, 'name': 'Kinh', 'code': 'KINH'},
     {'id': 2, 'name': 'Tày', 'code': 'TAY'},
@@ -39,7 +38,7 @@ def run():
     {'id': 34, 'name': 'Bana', 'code': 'BANA'},
     {'id': 35, 'name': 'Ngái', 'code': 'NGAI'},
     {'id': 36, 'name': 'Phu La', 'code': 'PHU_LA'},
-    {'id': 37, 'name': 'Si La', 'code': 'SI_LA'},  # Corrected
+    {'id': 37, 'name': 'Si La', 'code': 'SI_LA'},  
     {'id': 38, 'name': 'Lô Lô', 'code': 'LO_LO'},
     {'id': 39, 'name': 'Chơ Ro', 'code': 'CHO_RO'},
     {'id': 40, 'name': 'Kháng', 'code': 'KHANG'},
@@ -55,7 +54,6 @@ def run():
         new_name = record['name']
         new_code = record['code']
 
-        # Try to find the record with the given ID and update or create it
         ethnic_record, created = Ethnic.objects.update_or_create(
             id=record_id,
             defaults={'name': new_name, 'code': new_code}
