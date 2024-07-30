@@ -26,7 +26,7 @@ class UserView(
         return UserSerializer
 
     def list(self, request, pk=None):
-        users = User.objects.select_related('role').exclude(role__code="ADMIN").all()
+        users = User.objects.select_related('role').exclude(role__code="ADMIN").filter(deletedAt__isnull=True).all()
         serializer = UserSerializer(users, many=True)
         return ResponseReadMany(
             data=serializer.data,
