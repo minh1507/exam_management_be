@@ -43,7 +43,7 @@ class AuthView(
                     "username": existUser.username
                 },
                 "role": {
-                    "code": existUser.role.code
+                    "code": existUser.role.code if existUser.role is not None else None
                 }
             },
             "iat": timezone.now(),
