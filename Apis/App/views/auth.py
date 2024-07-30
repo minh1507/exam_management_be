@@ -29,7 +29,6 @@ class AuthView(
         
         dataSerializer = AuthSerializer(request.data)
         existUser = User.objects.select_related('password').select_related('role').filter(username=dataSerializer.data.get('username')).first()
-        print(existUser.role.name)
         if(existUser is None):
             return ResponseBadRequest(messages=[StringUtil.messages(KeyMessage.USERNAME.value, ContentMessage.NOT_EXISTED.value)]).to_response() 
   
