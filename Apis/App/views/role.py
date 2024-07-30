@@ -10,7 +10,7 @@ class RoleView(
     serializer_class = RoleSerializer
 
     def list(self, request, pk=None):
-        roles = Role.objects.all()
+        roles = Role.objects.exclude(code="ADMIN").all()
         serializer = RoleSerializer(roles, many=True)
 
         return ResponseReadMany(

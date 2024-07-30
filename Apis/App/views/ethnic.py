@@ -1,7 +1,7 @@
 from rest_framework import viewsets, mixins
 from App.models import Ethnic
 from App.serializers import EthnicSerializer, EthnicValidate, EthnicDeleteSerializer
-from App.commons.response import ResponseReadMany, ResponseReadOne, ResponseCreateOne, ResponseDestroyOne, ResponseBadRequest
+from App.commons.response import ResponseReadMany, ResponseReadOne, ResponseCreateOne, ResponseDestroyOne
 from App.commons.enum import ReponseEnum
 class EthnicView(
     mixins.CreateModelMixin,
