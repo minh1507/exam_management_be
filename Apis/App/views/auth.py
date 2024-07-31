@@ -1,6 +1,6 @@
 from rest_framework import viewsets
-from App.models import Password, User, Profile
-from App.serializers import AuthSerializer,RegisterValidate,UserSerializer,PasswordSerializer,LoginValidate,ProfileSerializer
+from App.models import Password, User, Profiling
+from App.serializers import AuthSerializer,RegisterValidate,UserSerializer,PasswordSerializer,LoginValidate,ProfilingSerializer
 from App.commons.response import ResponseCreateOne, ResponseBadRequest
 from App.commons.enum import ReponseEnum
 from rest_framework.decorators import action
@@ -84,7 +84,7 @@ class AuthView(
         if userSerializer.is_valid():
             userSerializer.save()
 
-        profileSerializer = ProfileSerializer(data={"firstname": "New user"})
+        profileSerializer = ProfilingSerializer(data={"firstname": "New user"})
 
         if profileSerializer.is_valid():
             profileSerializer.save()

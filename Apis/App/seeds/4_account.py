@@ -1,11 +1,11 @@
 from App.models.user import User
 from App.models.password import Password
 from App.models.role import Role
-from App.models.profile import Profile
+from App.models.profiling import Profiling
 
 def run():
     accounts = [
-        {'id': 1, 'username': 'admin', "role": "00000000000000000000000000000001", "password": "00000000000000000000000000000001", "profile": "00000000000000000000000000000001"},
+        {'id': 1, 'username': 'admin', "role": "00000000000000000000000000000001", "password": "00000000000000000000000000000001", "profiling": "00000000000000000000000000000001"},
     ]
     
     for record in accounts:
@@ -13,15 +13,15 @@ def run():
         new_username = record['username']
         password_id = record['password']  
         role_id = record['role']
-        profile_id = record['profile']
+        profiling_id = record['profiling']
 
         password_instance = Password.objects.get(id=password_id)
         role_instance = Role.objects.get(id=role_id)
-        profile_instance = Profile.objects.get(id=profile_id)
+        profiling_instance = Profiling.objects.get(id=profiling_id)
 
-        profile_record, created = User.objects.update_or_create(
+        profiling_record, created = User.objects.update_or_create(
             id=record_id,
-            defaults={'username': new_username, 'password': password_instance, 'role': role_instance, 'profile': profile_instance}
+            defaults={'username': new_username, 'password': password_instance, 'role': role_instance, 'profiling': profiling_instance}
         )
         
         if created:

@@ -1,15 +1,16 @@
 from rest_framework import serializers
-from App.models.user import User, Password, Profile
+from App.models.user import User, Password
 from App.commons.message import KeyMessage, ContentMessage
 from App.commons.util import MessageUtil
 from App.commons.util import StringUtil
 from .role import RoleSerializer
-
+from .profiling import ProfilingSerializer
 class UserSerializer(serializers.ModelSerializer):
     role = RoleSerializer(read_only=True)
+    profiling = ProfilingSerializer(read_only=True)
     class Meta:
         model = User
-        fields = ('id', 'username', 'role')
+        fields = ('id', 'username', 'profiling', 'role')
 
 class UserDeleteSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -49,11 +50,6 @@ class PasswordSerializer(serializers.HyperlinkedModelSerializer):
         instance = Password.objects.create(**validated_data)
         return instance.id
     
-class ProfileSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Profile
-        fields = ['firstname']
-
 class RegisterValidate():
     def run(value):
         messages = MessageUtil()
@@ -82,4 +78,4 @@ class UserCreateSerializer(serializers.Serializer):
 class UserChangeSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['username', 'password', 'role']
+        fields = ['username', 'password', 'role', 'profiling']

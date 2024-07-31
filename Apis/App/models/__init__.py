@@ -1,5 +1,5 @@
 from .user import User
-from .profile import Profile
+from .profiling import Profiling
 from .password import Password
 from .ethnic import Ethnic
 from .role import Role

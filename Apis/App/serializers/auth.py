@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from App.models import User, Password, Profile
+from App.models import User, Password
 from App.commons.message import KeyMessage, ContentMessage
 from App.commons.util import MessageUtil
 from App.commons.util import StringUtil
@@ -25,11 +25,6 @@ class PasswordSerializer(serializers.HyperlinkedModelSerializer):
         instance = Password.objects.create(**validated_data)
         return instance.id
     
-class ProfileSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Profile
-        fields = ['firstname']
-
 class RegisterValidate():
     def run(value):
         messages = MessageUtil()

@@ -1,8 +1,8 @@
 from rest_framework import viewsets, mixins
-from App.models import User, Password, Profile
+from App.models import User
 from App.serializers import (
     UserSerializer, UserValidate, UserDeleteSerializer, 
-    PasswordSerializer, ProfileSerializer, RegisterValidate, UserCreateSerializer, UserChangeSerializer
+    PasswordSerializer, RegisterValidate, UserCreateSerializer, UserChangeSerializer, ProfilingSerializer
 )
 from App.commons.response import (
     ResponseReadMany, ResponseReadOne, ResponseCreateOne, ResponseDestroyOne, ResponseBadRequest
@@ -26,7 +26,7 @@ class UserView(
         return UserSerializer
 
     def list(self, request, pk=None):
-        users = User.objects.select_related('role').exclude(role__code="ADMIN").filter(deletedAt__isnull=True).all()
+        users = User.objects.select_related('role', 'profiling').exclude(role__code="ADMIN").filter(deletedAt__isnull=True).all()
         serializer = UserSerializer(users, many=True)
         return ResponseReadMany(
             data=serializer.data,
@@ -61,20 +61,21 @@ class UserView(
         passwordSerializer.is_valid(raise_exception=True)
         resultPassword = passwordSerializer.save()
 
-        print(str(resultPassword))
+        profile_data = {"lastname": "New user"}
+        profileSerializer = ProfilingSerializer(data=profile_data)
+        profileSerializer.is_valid(raise_exception=True)
+        profiling = profileSerializer.save()
+
         account_data = {
             "username": dataSerializer.validated_data.get("username"),
             "password": str(resultPassword),
             "role": dataSerializer.validated_data.get("role"),
+            "profiling": profiling.id
         }
+        
         userSerializer = UserChangeSerializer(data=account_data)
         userSerializer.is_valid(raise_exception=True)
         userSerializer.save()
-
-        profile_data = {"firstname": "New user"}
-        profileSerializer = ProfileSerializer(data=profile_data)
-        profileSerializer.is_valid(raise_exception=True)
-        profileSerializer.save()
 
         return ResponseCreateOne(
             messages=[ResponseMessage.CREATE_SUCCESS.value],
@@ -100,7 +101,6 @@ class UserView(
         passwordSerializer.is_valid(raise_exception=True)
         resultPassword = passwordSerializer.save()
 
-        print(str(resultPassword))
         account_data = {
             "username": dataSerializer.validated_data.get("username"),
             "password": str(resultPassword),
@@ -111,7 +111,7 @@ class UserView(
         userSerializer.save()
 
         profile_data = {"firstname": "New user"}
-        profileSerializer = ProfileSerializer(data=profile_data)
+        profileSerializer = ProfilingSerializer(data=profile_data)
         profileSerializer.is_valid(raise_exception=True)
         profileSerializer.save()
 

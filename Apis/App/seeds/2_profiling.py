@@ -1,4 +1,4 @@
-from App.models.profile import Profile
+from App.models.profiling import Profiling
 
 def run():
     profiles = [
@@ -9,7 +9,7 @@ def run():
         record_id = record['id']
         new_lastname = record['lastname']
         
-        profile_record, created = Profile.objects.update_or_create(
+        profile_record, created = Profiling.objects.update_or_create(
             id=record_id,
             defaults={'lastname': new_lastname})
         
