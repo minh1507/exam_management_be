@@ -12,6 +12,8 @@ from datetime import timedelta
 import uuid
 import jwt
 import environ
+import uuid
+from django.core.cache import cache
 env = environ.Env()
 environ.Env.read_env()
 class AuthView(
@@ -35,7 +37,8 @@ class AuthView(
         if(StringUtil.compare_passwords(existUser.password.hash, dataSerializer.data.get('password')) == False):
             return ResponseBadRequest(messages=[StringUtil.messages(KeyMessage.PASSWORD.value, ContentMessage.WRONG.value)]).to_response() 
         
-        payload = {
+        key = existUser.username + str(uuid.uuid4())
+        access_token = jwt.encode({
             "idp": str(uuid.uuid4()),
             "data": {
                 "user": {
@@ -43,17 +46,18 @@ class AuthView(
                 },
                 "role": {
                     "code": existUser.role.code if existUser.role is not None else None
-                }
+                },
+                "access_key": key
             },
             "iat": timezone.now(),
             "exp": timezone.now() + timedelta(1)
-        }
+        }, env("ACCESS_TOKEN_KEY"), algorithm='HS256')   
+
 
         data = dict()
-        data["accessToken"] = jwt.encode(payload, env("ACCESS_TOKEN_KEY"), algorithm='HS256')
+        data["accessToken"] = access_token 
 
-        payload['exp'] = timezone.now() + timedelta(365)
-        data["refreshToken"] = jwt.encode(payload, env("REFRESH_TOKEN_KEY"), algorithm='HS256')
+        cache.set('key', access_token, timeout=60*15)  
 
         return ResponseCreateOne(messages=[ResponseMessage.LOGIN_SUCCESS.value], data=data, toast=True, status=ReponseEnum.SUCCESS.value).to_response()
 

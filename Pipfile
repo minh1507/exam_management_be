@@ -13,6 +13,7 @@ djangorestframework = "*"
 django-environ = "*"
 setuptools = "*"
 djangorestframework-simplejwt = "*"
+django-redis = "*"
 
 [dev-packages]
 
