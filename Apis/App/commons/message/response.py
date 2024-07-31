@@ -6,4 +6,5 @@ class ResponseMessage(Enum):
     UPDATE_SUCCESS = "success.update"
     DESTROY_SUCCESS = "success.destroy"
     REGISTER_SUCCESS = "success.register"
-    LOGIN_SUCCESS = "success.login"
+    LOGIN_SUCCESS = "success.login",
+    UNAUTHORIZE = "failed.unauthorize"
