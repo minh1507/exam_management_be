@@ -1,10 +1,15 @@
 from django.http import JsonResponse
+import jwt
+import environ
+env = environ.Env()
+environ.Env.read_env()
+from django.core.cache import cache
+
 class AuthorizationMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
 
     def __call__(self, request):
-        # Authorization logic
         if not self.is_authorized(request):
             return JsonResponse({
             "status": 401,
@@ -18,11 +23,20 @@ class AuthorizationMiddleware:
 
     def is_authorized(self, request):
         excluded_paths = ['/api/auth/login/', '/apis/']
-        if request.path in excluded_paths:
-            return True
-        else:
-            auth_header = request.headers.get('Authorization')
-            if(auth_header):
-                return True;
-            else: 
-                return False
+        try:
+            if request.path in excluded_paths:
+                return True
+            else:
+                auth_header = request.headers.get('Authorization')
+                if(auth_header):
+                    result = jwt.decode(auth_header, env("ACCESS_TOKEN_KEY"), algorithms='HS256')
+                    access_token = cache.get(result["data"]["access_key"])
+                    if access_token is not None:
+                        return True
+                    return False
+                else: 
+                    return False
+        except:
+            return False        
+            
+            
