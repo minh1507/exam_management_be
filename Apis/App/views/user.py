@@ -84,44 +84,6 @@ class UserView(
             data={"username": request.data.get("username")}
         ).to_response()
 
-    def update(self, request, pk):
-        messages = RegisterValidate.run(request.data)
-        if len(messages) > 0:
-            return ResponseBadRequest(messages=messages).to_response()
-
-        user = User.objects.get(pk=pk)
-
-        dataSerializer = UserCreateSerializer(data=request.data)
-        dataSerializer.is_valid(raise_exception=True)
-
-        password_data = {
-            "hash": StringUtil.hash_password_with_key(dataSerializer.validated_data.get("password"))
-        }
-        passwordSerializer = PasswordSerializer(data=password_data)
-        passwordSerializer.is_valid(raise_exception=True)
-        resultPassword = passwordSerializer.save()
-
-        account_data = {
-            "username": dataSerializer.validated_data.get("username"),
-            "password": str(resultPassword),
-            "role": dataSerializer.validated_data.get("role"),
-        }
-        userSerializer = UserChangeSerializer(data=account_data)
-        userSerializer.is_valid(raise_exception=True)
-        userSerializer.save()
-
-        profile_data = {"firstname": "New user"}
-        profileSerializer = ProfilingSerializer(data=profile_data)
-        profileSerializer.is_valid(raise_exception=True)
-        profileSerializer.save()
-
-        return ResponseCreateOne(
-            messages=[ResponseMessage.UPDATE_SUCCESS.value],
-            status=ReponseEnum.SUCCESS.value,
-            toast=True,
-            data={"username": request.data.get("username")}
-        ).to_response()
-
     def destroy(self, request, pk):
         messages = UserValidate.run(pk, 'pk')
         response = ResponseDestroyOne()

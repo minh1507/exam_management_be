@@ -56,39 +56,5 @@ class AuthView(
         data["refreshToken"] = jwt.encode(payload, env("REFRESH_TOKEN_KEY"), algorithm='HS256')
 
         return ResponseCreateOne(messages=[ResponseMessage.LOGIN_SUCCESS.value], data=data, toast=True, status=ReponseEnum.SUCCESS.value).to_response()
-    
-    @action(detail=False, methods=['post'], serializer_class=AuthSerializer)
-    def register(self, request):
-        messages = RegisterValidate.run(request.data)
 
-        if(len(messages) > 0):
-            return ResponseBadRequest(messages=messages).to_response() 
-        
-        dataSerializer = AuthSerializer(request.data)
-
-        password = dict()
-        password["hash"] = StringUtil.hash_password_with_key(dataSerializer.to_data().get("password"))
-
-        resultPassword = Password()
-        passwordSerializer = PasswordSerializer(data=password)
-        if passwordSerializer.is_valid():
-            resultPassword = passwordSerializer.save()
-
-        account = dict()
-        account["username"] = dataSerializer.to_data().get("username")
-        account["password"] = str(resultPassword)
-        account['role'] = "00000000000000000000000000000001"
-
-        userSerializer = UserSerializer(data=account)
-     
-        if userSerializer.is_valid():
-            userSerializer.save()
-
-        profileSerializer = ProfilingSerializer(data={"firstname": "New user"})
-
-        if profileSerializer.is_valid():
-            profileSerializer.save()
-            
-        return ResponseCreateOne(messages=[ResponseMessage.REGISTER_SUCCESS.value], status=ReponseEnum.CREATE.value, toast=True, data={"username": request.data.get("username")}).to_response()
-   
         
