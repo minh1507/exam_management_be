@@ -1,6 +1,6 @@
 from rest_framework import viewsets
-from App.models import Password, User, Profiling
-from App.serializers import AuthSerializer,RegisterValidate,UserSerializer,PasswordSerializer,LoginValidate,ProfilingSerializer
+from App.models import User
+from App.serializers import AuthSerializer,LoginValidate
 from App.commons.response import ResponseCreateOne, ResponseBadRequest
 from App.commons.enum import ReponseEnum
 from rest_framework.decorators import action
@@ -14,6 +14,7 @@ import jwt
 import environ
 import uuid
 from django.core.cache import cache
+import json
 env = environ.Env()
 environ.Env.read_env()
 class AuthView(
@@ -57,8 +58,9 @@ class AuthView(
         data = dict()
         data["accessToken"] = access_token 
 
-        cache.set('key', access_token, timeout=60*15)  
+        sanitized_token = access_token.encode('utf-8', 'ignore').decode('utf-8')
+        cache.set(key, sanitized_token, timeout=60*15)  
 
-        return ResponseCreateOne(messages=[ResponseMessage.LOGIN_SUCCESS.value], data=data, toast=True, status=ReponseEnum.SUCCESS.value).to_response()
+        return ResponseCreateOne(messages=ResponseMessage.LOGIN_SUCCESS.value, data=data, toast=True, status=ReponseEnum.SUCCESS.value).to_response()
 
         

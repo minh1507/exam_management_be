@@ -8,7 +8,7 @@ class AuthorizationMiddleware:
         if not self.is_authorized(request):
             return JsonResponse({
             "status": 401,
-            "messages": "failed.unauthorize",
+            "messages": ["failed.unauthorize"],
             "data": None,
             "toast": True
         }, status=401)
@@ -17,7 +17,7 @@ class AuthorizationMiddleware:
         return response
 
     def is_authorized(self, request):
-        excluded_paths = ['api/auth/login']
+        excluded_paths = ['/api/auth/login/', '/apis/']
         if request.path in excluded_paths:
             return True
         else:
