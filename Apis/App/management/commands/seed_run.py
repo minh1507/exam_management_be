@@ -9,7 +9,7 @@ class Command(BaseCommand):
         seeds_folder = os.path.join(os.path.dirname(__file__), '..', '..', 'seeds')
 
         arr = os.listdir(seeds_folder)
-        arr.reverse()
+        # arr.reverse()
         for filename in arr:
             if filename.endswith('.py') and filename != '__init__.py':
                 module_name = filename[:-3]  # Strip .py extension

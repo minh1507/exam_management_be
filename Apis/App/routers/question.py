@@ -5,6 +5,6 @@ from App.views import QuestionView
 router = routers.DefaultRouter()
 router.register(r'question',QuestionView,basename="question")
 
-subjectRouter = [
+questionRouter = [
     path('', include(router.urls)),
 ]
