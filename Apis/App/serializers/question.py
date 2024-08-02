@@ -5,12 +5,14 @@ from App.commons.message import KeyMessage, ContentMessage
 from App.commons.util import MessageUtil
 from App.commons.util import StringUtil
 from .subject import SubjectSerializer
+from .image import ImageSerializer
 
 class QuestionSerializer(serializers.ModelSerializer):
     subject = SubjectSerializer()
+    image = ImageSerializer()
     class Meta:
         model = Question
-        fields = ('id', 'subject', 'lecturer', 'content', "mark", "unit", "mixChoices", "imageId")
+        fields = ('id', 'subject', 'lecturer', 'content', "mark", "unit", "mixChoices", "image")
 
 class QuestionDeleteSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -40,7 +42,7 @@ class QuestionCreateSerializer(serializers.ModelSerializer):
     subject = serializers.PrimaryKeyRelatedField(queryset=Subject.objects.all())
     class Meta:
         model = Question
-        fields = ['subject', 'lecturer', 'content', 'mark', 'unit', 'mixChoices', 'imageId']
+        fields = ['subject', 'lecturer', 'content', 'mark', 'unit', 'mixChoices']
 
     def create(self, validated_data):
         return Question.objects.create(**validated_data)

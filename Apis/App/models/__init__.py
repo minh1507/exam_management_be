@@ -7,3 +7,4 @@ from .subject import Subject
 from .question import Question
 from .exam import Exam
 from .answer import Answer
+from .image import Image

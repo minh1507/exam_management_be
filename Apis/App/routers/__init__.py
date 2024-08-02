@@ -6,3 +6,4 @@ from .subject import *
 from .question import *
 from .exam import *
 from .answer import *
+from .image import *

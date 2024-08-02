@@ -7,3 +7,4 @@ from .question import *
 from .profiling import *
 from .exam import *
 from .answer import *
+from .image import *
