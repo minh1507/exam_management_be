@@ -6,12 +6,11 @@ from App.commons.util import MessageUtil
 from App.commons.util import StringUtil
 from .subject import SubjectSerializer
 
-class QuestionSerializer(serializers.HyperlinkedModelSerializer):
+class QuestionSerializer(serializers.ModelSerializer):
     subject = SubjectSerializer()
     class Meta:
         model = Question
-        fields = ('id', 'subject', 'code', 'lecturer', 'question', 'ansA', 'ansB',
-         'ansC', 'ansD', "answer", "mark", "unit", "mixChoices"
+        fields = ('id', 'subject', 'lecturer', 'question', "mark", "unit", "mixChoices", "imageId"
          )
 
 class QuestionDeleteSerializer(serializers.HyperlinkedModelSerializer):
@@ -34,11 +33,7 @@ class QuestionValidate():
             case "create":
                 checkRequire(value, 'code', message)
                 checkRequire(value, 'question', message)
-                checkRequire(value, 'ansA', message)
-                checkRequire(value, 'ansB', message)
-                checkRequire(value, 'answer', message)
                 checkRequire(value, 'mark', message)
-                checkRequire(value, 'unit', message)
                 return messages.get()
             case "update":
                 checkRequire(value, 'code', message)
@@ -55,21 +50,7 @@ class QuestionCreateSerializer(serializers.Serializer):
     subjectCode = serializers.CharField(max_length=50)
     lecturer = serializers.CharField(max_length=100)
     question = serializers.CharField()
-    ansA = serializers.CharField()
-    ansB = serializers.CharField()
-    ansC = serializers.CharField()
-    ansD = serializers.CharField()
-    answer = serializers.CharField(max_length=10)
     mark = serializers.FloatField()
     unit = serializers.CharField(max_length=50)
     mixChoices = serializers.BooleanField()
-
-    def to_data(self):
-            return self.data    
-
-
-class QuestionChangeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Question
-        fields = ['code', 'subject', 'lecturer', 'question', 'ansA', 'ansB',
-         'ansC', 'ansD', "answer", "mark", "unit", "mixChoices"]  
+    imageId = serializer.CharField()

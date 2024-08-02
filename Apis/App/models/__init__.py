@@ -6,3 +6,4 @@ from .role import Role
 from .subject import Subject
 from .question import Question
 from .exam import Exam
+from .answer import Answer

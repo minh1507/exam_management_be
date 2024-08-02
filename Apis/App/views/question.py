@@ -12,7 +12,11 @@ class QuestionView(
     viewsets.GenericViewSet
     ):
     queryset = Question.objects.all()
-    serializer_class = QuestionSerializer
+
+    def get_serializer_class(self):
+        if self.action == 'create' or self.action == 'update':
+            return QuestionCreateSerializer
+        return QuestionSerializer
 
     def list(self, request, pk=None):
         questions = Question.objects.filter(deletedAt__isnull=True).all()
@@ -46,16 +50,12 @@ class QuestionView(
             "subject": Subject.objects.get(code=serializer.validated_data.get("subjectCode")),
             "lecturer": serializer.validated_data.get("lecturer"),
             "question": serializer.validated_data.get("question"),
-            "ansA": serializer.validated_data.get("ansA"),
-            "ansB": serializer.validated_data.get("ansB"),
-            "ansC": serializer.validated_data.get("ansC"),
-            "ansD": serializer.validated_data.get("ansD"),
-            "answer": serializer.validated_data.get("answer"),
             "mark": serializer.validated_data.get("mark"),
             "unit": serializer.validated_data.get("unit"),
-            "mixChoices": serializer.validated_data.get("mixChoices")
+            "mixChoices": serializer.validated_data.get("mixChoices"),
+            "imageId" : serializer.validated_data.get("imageId")
         }
-        questionSerializer = QuestionChangeSerializer(data = question_data)
+        questionSerializer = QuestionSerializer(data = question_data)
         questionSerializer.is_valid(raise_exception=True)
         questionSerializer.save()
 
@@ -80,10 +80,23 @@ class QuestionView(
             return response.to_response() 
         
         questions = Question.objects.get(pk=pk)
-        serializer = QuestionSerializer(instance=questions,data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            response.data = serializer.data
+        # serializer = QuestionSerializer(instance=questions,data=request.data)
+        serializer = QuestionCreateSerializer(data=request.data, instance=question)
+        question_data = {
+            "code": serializer.validated_data.get("code"),
+            "subject": Subject.objects.get(code=serializer.validated_data.get("subjectCode")),
+            "lecturer": serializer.validated_data.get("lecturer"),
+            "question": serializer.validated_data.get("question"),
+            "mark": serializer.validated_data.get("mark"),
+            "unit": serializer.validated_data.get("unit"),
+            "mixChoices": serializer.validated_data.get("mixChoices"),
+            "imageId" : serializer.validated_data.get("imageId")
+        }
+        questionSerializer = QuestionSerializer(data = question_data)
+
+        if questionSerializer.is_valid():
+            questionSerializer.save()
+            response.data = questionSerializer.data
             response.toast = True
             response.status = ReponseEnum.SUCCESS.value
         return response.to_response() 
