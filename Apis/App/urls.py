@@ -1,8 +1,8 @@
 from django.urls import path, include
-from .routers import ethnicRouter, AuthRouter, roleRouter, userRouter, subjectRouter, questionRouter
+from .routers import ethnicRouter, authRouter, roleRouter, userRouter, subjectRouter, questionRouter, answerRouter
 from .swagger import swaggerRouter
 
 urlpatterns = [
     path('apis/', include(swaggerRouter)), 
-    path('api/', include(ethnicRouter+AuthRouter+roleRouter+userRouter+subjectRouter+questionRouter)), 
+    path('api/', include(ethnicRouter+authRouter+roleRouter+userRouter+subjectRouter+questionRouter+answerRouter)), 
 ]

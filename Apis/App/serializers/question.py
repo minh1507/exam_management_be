@@ -21,22 +21,22 @@ class QuestionDeleteSerializer(serializers.HyperlinkedModelSerializer):
 class QuestionValidate():
     def checkRequire(value, field, *message):
         if value.get(field) is None or value.get(field) == "":
-            messages.push(ContentMessage.REQUIRED.value, KeyMessage.field.value)
+            message.push(ContentMessage.REQUIRED.value, KeyMessage.field.value)
 
     def checkInvalid(value, field, *message):
         if value.get(field) is None or value.get(field) == "":
-            messages.push(ContentMessage.INVALID.value, KeyMessage.field.value)
+            message.push(ContentMessage.INVALID.value, KeyMessage.field.value)
 
-    def run(value, type, id=None):
+    def run(self, value, type, id=None):
         messages = MessageUtil()
         match type:
             case "create":
-                checkRequire(value, 'code', message)
-                checkRequire(value, 'question', message)
-                checkRequire(value, 'mark', message)
+                self.checkRequire(value, 'code', messages)
+                self.checkRequire(value, 'question', messages)
+                self.checkRequire(value, 'mark', messages)
                 return messages.get()
             case "update":
-                checkRequire(value, 'code', message)
+                self.checkRequire(value, 'code', messages)
                 return messages.get()
             case "pk":
                 if value.isnumeric() == True:
@@ -49,8 +49,8 @@ class QuestionCreateSerializer(serializers.Serializer):
     code = serializers.CharField(max_length=50)
     subjectCode = serializers.CharField(max_length=50)
     lecturer = serializers.CharField(max_length=100)
-    question = serializers.CharField()
+    question = serializers.CharField(max_length=50)
     mark = serializers.FloatField()
     unit = serializers.CharField(max_length=50)
     mixChoices = serializers.BooleanField()
-    imageId = serializer.CharField()
+    imageId = serializers.CharField(max_length=50)

@@ -1,6 +1,9 @@
 from rest_framework import serializers
-from App.models.answer import Answer
+from App.models.answer import Answer, Question
 from .question import QuestionSerializer
+from App.commons.message import KeyMessage, ContentMessage
+from App.commons.util import MessageUtil
+from App.commons.util import StringUtil
 
 class AnswerSerializer(serializers.ModelSerializer):
     question = QuestionSerializer()
@@ -17,21 +20,21 @@ class AnswerDeleteSerializer(serializers.HyperlinkedModelSerializer):
 class AnswerValidate():
     def checkRequire(value, field, *message):
         if value.get(field) is None or value.get(field) == "":
-            messages.push(ContentMessage.REQUIRED.value, KeyMessage.field.value)
+            message.push(ContentMessage.REQUIRED.value, KeyMessage.field.value)
 
     def checkInvalid(value, field, *message):
         if value.get(field) is None or value.get(field) == "":
-            messages.push(ContentMessage.INVALID.value, KeyMessage.field.value)
+            message.push(ContentMessage.INVALID.value, KeyMessage.field.value)
 
-    def run(value, type, id=None):
+    def run(self,value, type, id=None):
         messages = MessageUtil()
         match type:
             case "create":
-                checkRequire(value, 'content', message)
-                checkRequire(value, 'question', message)
+                self.checkRequire(value, 'content', messages)
+                self.checkRequire(value, 'question', messages)
                 return messages.get()
             case "update":
-                checkRequire(value, 'content', message)
+                self.checkRequire(value, 'content', messages)
                 return messages.get()
             case "pk":
                 if value.isnumeric() == True:
@@ -42,7 +45,7 @@ class AnswerValidate():
 
 class AnswerCreateSerializer(serializers.Serializer):
     questionId = serializers.CharField(max_length=50)
-    content = serializers.CharField()
+    content = serializers.CharField(max_length=50)
     isResult = serializers.BooleanField()
 
                 

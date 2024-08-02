@@ -1,6 +1,6 @@
 from rest_framework import viewsets, mixins
-from App.models import Question
-from App.serializers import QuestionDeleteSerializer, QuestionSerializer, QuestionValidate
+from App.models import Question, Subject
+from App.serializers import QuestionDeleteSerializer, QuestionSerializer, QuestionValidate, QuestionCreateSerializer
 from App.commons.response import ResponseReadMany, ResponseReadOne, ResponseCreateOne, ResponseDestroyOne
 from App.commons.enum import ReponseEnum
 
@@ -81,7 +81,7 @@ class QuestionView(
         
         questions = Question.objects.get(pk=pk)
         # serializer = QuestionSerializer(instance=questions,data=request.data)
-        serializer = QuestionCreateSerializer(data=request.data, instance=question)
+        serializer = QuestionCreateSerializer(data=request.data, instance=questions)
         question_data = {
             "code": serializer.validated_data.get("code"),
             "subject": Subject.objects.get(code=serializer.validated_data.get("subjectCode")),

@@ -3,5 +3,5 @@ from App.models.exam import Exam
 
 class ExamSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Role
-        fields = ('id', 'name', 'code')
+        model = Exam
+        fields = ('id', 'code')

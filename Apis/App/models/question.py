@@ -11,4 +11,4 @@ class Question(Base):
     mark = models.FloatField()
     unit = models.CharField(max_length=50)
     mixChoices = models.BooleanField(default=True)
-    imageId = models.CharField()
+    imageId = models.CharField(max_length=50)

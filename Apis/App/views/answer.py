@@ -1,6 +1,6 @@
 from rest_framework import viewsets, mixins
-from App.models import Answer
-from App.serializers import AnswerSerializer
+from App.models import Answer, Question
+from App.serializers import AnswerSerializer, AnswerCreateSerializer, AnswerValidate, AnswerDeleteSerializer
 from App.commons.response import ResponseReadMany, ResponseReadOne, ResponseCreateOne, ResponseDestroyOne
 from App.commons.enum import ReponseEnum
 
@@ -76,7 +76,7 @@ class AnswerView(
             return response.to_response() 
         
         answers = Answer.objects.get(pk=pk)
-        serializer = AnswerCreateSerializer(data=request.data, instance=answer)
+        serializer = AnswerCreateSerializer(data=request.data, instance=answers)
         answer_data = {
             "questionId": Question.objects.get(id=serializer.validated_data.get("questionId")),
             "content": serializer.validated_data.get("content"),

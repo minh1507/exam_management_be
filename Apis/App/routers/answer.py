@@ -3,8 +3,8 @@ from rest_framework import routers
 from App.views import AnswerView
 
 router = routers.DefaultRouter()
-router.register(r'user',AnswerView,basename="answer")
+router.register(r'answer',AnswerView,basename="answer")
 
-userRouter = [
+answerRouter = [
     path('', include(router.urls)),
 ]

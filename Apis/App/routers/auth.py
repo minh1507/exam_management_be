@@ -5,6 +5,6 @@ from App.views import AuthView
 router = routers.DefaultRouter()
 router.register(r'auth',AuthView,basename="auth")
 
-AuthRouter = [
+authRouter = [
     path('', include(router.urls)),
 ]
