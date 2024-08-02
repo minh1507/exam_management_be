@@ -7,7 +7,7 @@ class Question(Base):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE, null = False)
     lecturer = models.CharField(max_length=100, null=True)
-    question = models.TextField()
+    content = models.TextField()
     mark = models.FloatField()
     unit = models.CharField(max_length=50)
     mixChoices = models.BooleanField(default=True)

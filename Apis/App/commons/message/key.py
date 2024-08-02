@@ -7,3 +7,5 @@ class KeyMessage(Enum):
     ID = "id"
     USERNAME = 'username'
     PASSWORD = 'password'
+    CONTENT = 'content'
+    MARK = 'mark'

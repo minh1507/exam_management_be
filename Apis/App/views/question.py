@@ -45,19 +45,6 @@ class QuestionView(
         response = ResponseCreateOne()
 
         serializer = QuestionCreateSerializer(data=request.data)
-        question_data = {
-            "code": serializer.validated_data.get("code"),
-            "subject": Subject.objects.get(code=serializer.validated_data.get("subjectCode")),
-            "lecturer": serializer.validated_data.get("lecturer"),
-            "question": serializer.validated_data.get("question"),
-            "mark": serializer.validated_data.get("mark"),
-            "unit": serializer.validated_data.get("unit"),
-            "mixChoices": serializer.validated_data.get("mixChoices"),
-            "imageId" : serializer.validated_data.get("imageId")
-        }
-        questionSerializer = QuestionSerializer(data = question_data)
-        questionSerializer.is_valid(raise_exception=True)
-        questionSerializer.save()
 
         if serializer.is_valid() and len(messages)==0:
             serializer.save()

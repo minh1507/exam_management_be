@@ -10,8 +10,7 @@ class QuestionSerializer(serializers.ModelSerializer):
     subject = SubjectSerializer()
     class Meta:
         model = Question
-        fields = ('id', 'subject', 'lecturer', 'question', "mark", "unit", "mixChoices", "imageId"
-         )
+        fields = ('id', 'subject', 'lecturer', 'content', "mark", "unit", "mixChoices", "imageId")
 
 class QuestionDeleteSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -27,16 +26,14 @@ class QuestionValidate():
         if value.get(field) is None or value.get(field) == "":
             message.push(ContentMessage.INVALID.value, KeyMessage.field.value)
 
-    def run(self, value, type, id=None):
+    def run(value, type, id=None):
         messages = MessageUtil()
         match type:
             case "create":
-                self.checkRequire(value, 'code', messages)
-                self.checkRequire(value, 'question', messages)
-                self.checkRequire(value, 'mark', messages)
-                return messages.get()
-            case "update":
-                self.checkRequire(value, 'code', messages)
+                if value.get('content') is None or value.get('content') == "":
+                    messages.push(ContentMessage.REQUIRED.value, KeyMessage.CONTENT.value)
+                if value.get('mark') is None or value.get('mark') == "":
+                    messages.push(ContentMessage.REQUIRED.value, KeyMessage.MARK.value)
                 return messages.get()
             case "pk":
                 if value.isnumeric() == True:
@@ -45,12 +42,11 @@ class QuestionValidate():
                     messages.push(ContentMessage.INVALID.value, KeyMessage.ID.value)
                 return messages.get()
 
-class QuestionCreateSerializer(serializers.Serializer):
-    code = serializers.CharField(max_length=50)
-    subjectCode = serializers.CharField(max_length=50)
-    lecturer = serializers.CharField(max_length=100)
-    question = serializers.CharField(max_length=50)
-    mark = serializers.FloatField()
-    unit = serializers.CharField(max_length=50)
-    mixChoices = serializers.BooleanField()
-    imageId = serializers.CharField(max_length=50)
+class QuestionCreateSerializer(serializers.ModelSerializer):
+    subject = serializers.PrimaryKeyRelatedField(queryset=Subject.objects.all())
+    class Meta:
+        model = Question
+        fields = ['subject', 'lecturer', 'content', 'mark', 'unit', 'mixChoices', 'imageId']
+
+    def create(self, validated_data):
+        return Question.objects.create(**validated_data)
