@@ -58,7 +58,7 @@ class QuestionView(
         return response.to_response()  
     
     def update(self, request, pk):
-        messages = QuestionValidate.run(request.data, 'update', pk) + QuestionValidate.run(pk, 'pk')
+        messages = QuestionValidate.run(request.data, 'create', pk) + QuestionValidate.run(pk, 'pk')
         response = ResponseCreateOne()
         if(len(messages) > 0):
             response.messages = messages
@@ -67,26 +67,14 @@ class QuestionView(
             return response.to_response() 
         
         questions = Question.objects.get(pk=pk)
-        # serializer = QuestionSerializer(instance=questions,data=request.data)
-        serializer = QuestionCreateSerializer(data=request.data, instance=questions)
-        question_data = {
-            "code": serializer.validated_data.get("code"),
-            "subject": Subject.objects.get(code=serializer.validated_data.get("subjectCode")),
-            "lecturer": serializer.validated_data.get("lecturer"),
-            "question": serializer.validated_data.get("question"),
-            "mark": serializer.validated_data.get("mark"),
-            "unit": serializer.validated_data.get("unit"),
-            "mixChoices": serializer.validated_data.get("mixChoices"),
-            "imageId" : serializer.validated_data.get("imageId")
-        }
-        questionSerializer = QuestionSerializer(data = question_data)
-
-        if questionSerializer.is_valid():
-            questionSerializer.save()
-            response.data = questionSerializer.data
+        serializer = QuestionCreateSerializer(instance=questions,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            response.data = serializer.data
             response.toast = True
             response.status = ReponseEnum.SUCCESS.value
-        return response.to_response() 
+        print(serializer.error_messages)
+        return response.to_response()  
     
     def destroy(self, request, pk):
         messages = QuestionValidate.run(pk, 'pk')
