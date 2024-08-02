@@ -73,7 +73,6 @@ class QuestionView(
             response.data = serializer.data
             response.toast = True
             response.status = ReponseEnum.SUCCESS.value
-        print(serializer.error_messages)
         return response.to_response()  
     
     def destroy(self, request, pk):

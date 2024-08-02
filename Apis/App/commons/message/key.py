@@ -9,3 +9,4 @@ class KeyMessage(Enum):
     PASSWORD = 'password'
     CONTENT = 'content'
     MARK = 'mark'
+    SUBJECT = 'subject'

@@ -18,18 +18,12 @@ class QuestionDeleteSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('id', 'deletedAt')
 
 class QuestionValidate():
-    def checkRequire(value, field, *message):
-        if value.get(field) is None or value.get(field) == "":
-            message.push(ContentMessage.REQUIRED.value, KeyMessage.field.value)
-
-    def checkInvalid(value, field, *message):
-        if value.get(field) is None or value.get(field) == "":
-            message.push(ContentMessage.INVALID.value, KeyMessage.field.value)
-
     def run(value, type, id=None):
         messages = MessageUtil()
         match type:
             case "create":
+                if Subject.objects.filter(id=value.get('subject')).exists() == False:
+                    messages.push(ContentMessage.NOT_EXISTED.value, KeyMessage.SUBJECT.value)
                 if value.get('content') is None or value.get('content') == "":
                     messages.push(ContentMessage.REQUIRED.value, KeyMessage.CONTENT.value)
                 if value.get('mark') is None or value.get('mark') == "":
