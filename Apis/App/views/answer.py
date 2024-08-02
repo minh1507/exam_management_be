@@ -1,5 +1,5 @@
 from rest_framework import viewsets, mixins
-from App.models import Answer, Question
+from App.models import Answer
 from App.serializers import AnswerSerializer, AnswerCreateSerializer, AnswerValidate, AnswerDeleteSerializer
 from App.commons.response import ResponseReadMany, ResponseReadOne, ResponseCreateOne, ResponseDestroyOne
 from App.commons.enum import ReponseEnum
@@ -46,14 +46,6 @@ class AnswerView(
         response = ResponseCreateOne()
 
         serializer = AnswerCreateSerializer(data=request.data)
-        answer_data = {
-            "questionId": Question.objects.get(id=serializer.validated_data.get("questionId")),
-            "content": serializer.validated_data.get("content"),
-            "isResult": serializer.validated_data.get("isResult")
-        }
-        answerSerializer = AnswerSerializer(data = answer_data)
-        answerSerializer.is_valid(raise_exception=True)
-        answerSerializer.save()
 
         if serializer.is_valid() and len(messages)==0:
             serializer.save()
@@ -67,7 +59,7 @@ class AnswerView(
         return response.to_response()  
     
     def update(self, request, pk):
-        messages = AnswerValidate.run(request.data, 'update', pk) + AnswerValidate.run(pk, 'pk')
+        messages = AnswerValidate.run(request.data, 'create', pk) + AnswerValidate.run(pk, 'pk')
         response = ResponseCreateOne()
         if(len(messages) > 0):
             response.messages = messages
@@ -76,17 +68,10 @@ class AnswerView(
             return response.to_response() 
         
         answers = Answer.objects.get(pk=pk)
-        serializer = AnswerCreateSerializer(data=request.data, instance=answers)
-        answer_data = {
-            "questionId": Question.objects.get(id=serializer.validated_data.get("questionId")),
-            "content": serializer.validated_data.get("content"),
-            "isResult": serializer.validated_data.get("isResult")
-        }
-        answerSerializer = AnswerSerializer(data = answer_data)
-
-        if answerSerializer.is_valid():
-            answerSerializer.save()
-            response.data = answerSerializer.data
+        serializer = AnswerCreateSerializer(instance=answers,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            response.data = serializer.data
             response.toast = True
             response.status = ReponseEnum.SUCCESS.value
         return response.to_response() 

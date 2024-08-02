@@ -18,23 +18,14 @@ class AnswerDeleteSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('id', 'deletedAt')
 
 class AnswerValidate():
-    def checkRequire(value, field, *message):
-        if value.get(field) is None or value.get(field) == "":
-            message.push(ContentMessage.REQUIRED.value, KeyMessage.field.value)
-
-    def checkInvalid(value, field, *message):
-        if value.get(field) is None or value.get(field) == "":
-            message.push(ContentMessage.INVALID.value, KeyMessage.field.value)
-
-    def run(self,value, type, id=None):
+    def run(value, type, id=None):
         messages = MessageUtil()
         match type:
             case "create":
-                self.checkRequire(value, 'content', messages)
-                self.checkRequire(value, 'question', messages)
-                return messages.get()
-            case "update":
-                self.checkRequire(value, 'content', messages)
+                if Question.objects.filter(id=value.get('question')).exists() == False:
+                    messages.push(ContentMessage.NOT_EXISTED.value, KeyMessage.SUBJECT.value)
+                if value.get('content') is None or value.get('content') == "":
+                    messages.push(ContentMessage.REQUIRED.value, KeyMessage.CONTENT.value)
                 return messages.get()
             case "pk":
                 if value.isnumeric() == True:
@@ -43,10 +34,14 @@ class AnswerValidate():
                     messages.push(ContentMessage.INVALID.value, KeyMessage.ID.value)
                 return messages.get()
 
-class AnswerCreateSerializer(serializers.Serializer):
-    questionId = serializers.CharField(max_length=50)
-    content = serializers.CharField(max_length=50)
-    isResult = serializers.BooleanField()
+class AnswerCreateSerializer(serializers.ModelSerializer):
+    question = serializers.PrimaryKeyRelatedField(queryset=Question.objects.all())
+    class Meta:
+        model = Answer
+        fields = ['question', 'content', 'isResult']
+
+    def create(self, validated_data):
+        return Answer.objects.create(**validated_data)
 
                 
         
