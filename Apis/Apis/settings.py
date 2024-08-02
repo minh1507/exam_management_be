@@ -30,7 +30,7 @@ INSTALLED_APPS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
 }
 
 MIDDLEWARE = [
@@ -148,3 +148,23 @@ CACHES = {
         }
     }
 }
+
+from typing import List, Tuple
+from datetime import timedelta
+
+MINIO_EXTERNAL_ENDPOINT = "127.0.0.1:9000"
+MINIO_EXTERNAL_ENDPOINT_USE_HTTPS = False
+MINIO_ENDPOINT = '127.0.0.1:9000'
+MINIO_ACCESS_KEY = 'iWfjNSPocZD7XqofU7HP'
+MINIO_SECRET_KEY = 'fTYMXBFKkSKkR5MXxyMu4mE7N2MqQM9T3JSOG23y'
+MINIO_PRIVATE_BUCKETS = [
+    'exam',
+ 
+]
+MINIO_PUBLIC_BUCKETS = [
+    ""
+]
+MINIO_POLICY_HOOKS: List[Tuple[str, dict]] = []
+
+MINIO_URL_EXPIRY_HOURS = timedelta(days=1)
+MINIO_MEDIA_FILES_BUCKET = 'exam'

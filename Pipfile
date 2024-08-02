@@ -15,6 +15,7 @@ setuptools = "*"
 djangorestframework-simplejwt = "*"
 django-redis = "*"
 drf-spectacular = "*"
+django-minio-backend = "*"
 
 [dev-packages]
 

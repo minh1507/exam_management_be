@@ -7,7 +7,7 @@ from App.commons.util import StringUtil
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
-        fields = ('id', "origin_name", "mime_type", "size", "target", "path")
+        fields = ("id" , "file" , "size" , "type", "original_name")
 
 class ImageDeleteSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -34,8 +34,21 @@ class ImageValidate():
                 return messages.get()
 
 class ImageCreateSerializer(serializers.ModelSerializer):
-    image = serializers.ImageField()
-
     class Meta:
         model = Image
-        fields = ['image']
+        fields = ("id" , "file" , "size" , "type", "original_name")
+        
+    def __init__(self, *args, **kwargs):
+        super(ImageCreateSerializer, self).__init__(*args, **kwargs)
+        self.fields['size'].required = False
+        self.fields['type'].required = False
+        self.fields['original_name'].required = False
+
+
+class ImageMakeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Image
+        fields = ("id" , "file" )
+        
+
+ 

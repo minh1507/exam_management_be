@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from App.models.subject import Subject
 from App.models.question import Question
+from App.models.image import Image
 from App.commons.message import KeyMessage, ContentMessage
 from App.commons.util import MessageUtil
 from App.commons.util import StringUtil
@@ -40,9 +41,10 @@ class QuestionValidate():
 
 class QuestionCreateSerializer(serializers.ModelSerializer):
     subject = serializers.PrimaryKeyRelatedField(queryset=Subject.objects.all())
+    image = serializers.PrimaryKeyRelatedField(queryset=Image.objects.all())
     class Meta:
         model = Question
-        fields = ['subject', 'lecturer', 'content', 'mark', 'unit', 'mixChoices']
+        fields = ['subject', 'lecturer', 'content', 'mark', 'unit', 'mixChoices', 'image']
 
     def create(self, validated_data):
         return Question.objects.create(**validated_data)

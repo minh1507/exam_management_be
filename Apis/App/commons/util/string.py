@@ -27,3 +27,7 @@ class StringUtil:
         return None
     def messages(key,content):
         return content + '.' + key
+    def get_uuid_filename(instance, filename):
+        ext = filename.split('.')[-1]
+        filename = f'{uuid.uuid4()}.{ext}'
+        return filename

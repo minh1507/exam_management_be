@@ -1,10 +1,10 @@
 from rest_framework import viewsets, mixins
 from App.models import Image
-from App.serializers import ImageDeleteSerializer, ImageSerializer, ImageValidate, ImageCreateSerializer
+from App.serializers import ImageDeleteSerializer, ImageSerializer, ImageValidate, ImageCreateSerializer, ImageMakeSerializer
 from App.commons.response import ResponseReadMany, ResponseReadOne, ResponseCreateOne, ResponseDestroyOne
 from App.commons.enum import ReponseEnum
 from rest_framework.parsers import MultiPartParser
-
+import uuid
 class ImageView(
     mixins.CreateModelMixin,
     mixins.ListModelMixin,
@@ -16,7 +16,7 @@ class ImageView(
     
     def get_serializer_class(self):
         if self.action == 'create' or self.action == 'update':
-            return ImageCreateSerializer
+            return ImageMakeSerializer
         return ImageSerializer
     parser_classes = [MultiPartParser]
 
@@ -43,39 +43,34 @@ class ImageView(
         return response.to_response()
     
     def create(self, request):
-        messages = ImageValidate.run(request.data, 'create')
         response = ResponseCreateOne()
+        file = request.data.get("file")
+        print(request.data)
 
-        serializer = ImageSerializer(data=request.data)
-
-        if serializer.is_valid() and len(messages)==0:
-            serializer.save()
-            response.data = serializer.data
-            response.toast = True
-        else:
-            response.messages = messages
+        if not file:
+            response.messages = ['Image file is required.']
             response.status = ReponseEnum.BAD_REQUEST.value
             response.toast = True
-            
-        return response.to_response()  
-    
-    def update(self, request, pk):
-        messages = ImageValidate.run(request.data, 'create', pk) + ImageValidate.run(pk, 'pk')
-        response = ResponseCreateOne()
-        if(len(messages) > 0):
-            response.messages = messages
-            response.status = ReponseEnum.BAD_REQUEST.value
-            response.toast = True
-            return response.to_response() 
-        
-        images = Image.objects.get(pk=pk)
-        serializer = ImageSerializer(instance=images,data=request.data)
+            return response.to_response()
+
+        file_data = {
+            "file": file,
+            "type": file.content_type,
+            "size": file.size,
+            "original_name": file.name
+        }
+
+        serializer = ImageCreateSerializer(data=file_data)
         if serializer.is_valid():
             serializer.save()
             response.data = serializer.data
             response.toast = True
             response.status = ReponseEnum.SUCCESS.value
-        return response.to_response()  
+        else:
+            response.messages = serializer.errors
+            response.status = ReponseEnum.BAD_REQUEST.value
+
+        return response.to_response() 
     
     def destroy(self, request, pk):
         messages = ImageValidate.run(pk, 'pk')
