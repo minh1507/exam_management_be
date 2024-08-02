@@ -3,7 +3,6 @@ from App.models.image import Image
 from App.commons.message import KeyMessage, ContentMessage
 from App.commons.util import MessageUtil
 from App.commons.util import StringUtil
-from .subject import SubjectSerializer
 
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -34,3 +33,9 @@ class ImageValidate():
                     messages.push(ContentMessage.INVALID.value, KeyMessage.ID.value)
                 return messages.get()
 
+class ImageCreateSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField()
+
+    class Meta:
+        model = Image
+        fields = ['image']

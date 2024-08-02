@@ -1,8 +1,9 @@
 from rest_framework import viewsets, mixins
 from App.models import Image
-from App.serializers import ImageDeleteSerializer, ImageSerializer, ImageValidate
+from App.serializers import ImageDeleteSerializer, ImageSerializer, ImageValidate, ImageCreateSerializer
 from App.commons.response import ResponseReadMany, ResponseReadOne, ResponseCreateOne, ResponseDestroyOne
 from App.commons.enum import ReponseEnum
+from rest_framework.parsers import MultiPartParser
 
 class ImageView(
     mixins.CreateModelMixin,
@@ -12,7 +13,12 @@ class ImageView(
     viewsets.GenericViewSet
     ):
     queryset = Image.objects.all()
-    serializer_class = ImageSerializer
+    
+    def get_serializer_class(self):
+        if self.action == 'create' or self.action == 'update':
+            return ImageCreateSerializer
+        return ImageSerializer
+    parser_classes = [MultiPartParser]
 
     def list(self, request, pk=None):
         images = Image.objects.filter(deletedAt__isnull=True).all()

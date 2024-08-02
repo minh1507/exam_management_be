@@ -14,6 +14,7 @@ django-environ = "*"
 setuptools = "*"
 djangorestframework-simplejwt = "*"
 django-redis = "*"
+drf-spectacular = "*"
 
 [dev-packages]
 
