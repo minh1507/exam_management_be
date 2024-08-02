@@ -3,8 +3,8 @@ from rest_framework import routers
 from App.views import ExamView
 
 router = routers.DefaultRouter()
-router.register(r'user',ExamView,basename="exam")
+router.register(r'exam',ExamView,basename="exam")
 
-userRouter = [
+examRouter = [
     path('', include(router.urls)),
 ]
