@@ -14,7 +14,7 @@ class AnswerSerializer(serializers.ModelSerializer):
 
 class AnswerDeleteSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = Question
+        model = Answer
         fields = ('id', 'deletedAt')
 
 class AnswerValidate():
