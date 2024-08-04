@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from App.models.subject import Subject
 from App.models.question import Question
+from App.models.answer import Answer
 from App.models.image import Image
 from App.commons.message import KeyMessage, ContentMessage
 from App.commons.util import MessageUtil
@@ -8,12 +9,18 @@ from App.commons.util import StringUtil
 from .subject import SubjectSerializer
 from .image import ImageSerializer
 
+class AnswerForQuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = ['id', 'content', "isResult"] 
+
 class QuestionSerializer(serializers.ModelSerializer):
     subject = SubjectSerializer()
     image = ImageSerializer()
+    answers = AnswerForQuestionSerializer(many=True, read_only=True)
     class Meta:
         model = Question
-        fields = ('id', 'subject', 'lecturer', 'content', "mark", "unit", "mixChoices", "image")
+        fields = ('id', 'subject', 'lecturer', 'content', "mark", "unit", "mixChoices", "image", 'answers')
 
 class QuestionDeleteSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

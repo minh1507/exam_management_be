@@ -13,3 +13,7 @@ class Question(Base):
     mixChoices = models.BooleanField(default=True)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE, null = False)
     image = models.ForeignKey(Image, on_delete=models.CASCADE, null = True)
+
+    @property
+    def answers(self):
+        return list(self.answers.all())
