@@ -3,7 +3,8 @@ from App.models import Answer
 from App.serializers import AnswerSerializer, AnswerCreateSerializer, AnswerValidate, AnswerDeleteSerializer
 from App.commons.response import ResponseReadMany, ResponseReadOne, ResponseCreateOne, ResponseDestroyOne
 from App.commons.enum import ReponseEnum
-
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 class AnswerView(
     mixins.CreateModelMixin,
     mixins.ListModelMixin,
@@ -18,9 +19,16 @@ class AnswerView(
             return AnswerCreateSerializer
         return AnswerSerializer
 
-    
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                'question_id', openapi.IN_QUERY, description="Question id", type=openapi.TYPE_STRING, required=True
+            )
+        ]
+    )
     def list(self, request, pk=None):
-        answers = Answer.objects.filter(deletedAt__isnull=True).all()
+        pk = request.query_params.get('question_id', None)
+        answers = Answer.objects.select_related('question').filter(deletedAt__isnull=True, question__id=pk).all()
         serializer = AnswerSerializer(answers, many=True)
 
         return ResponseReadMany(

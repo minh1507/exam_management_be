@@ -22,7 +22,7 @@ class AuthorizationMiddleware:
         return response
 
     def is_authorized(self, request):
-        excluded_paths = ['/api/auth/login/', '/apis/']
+        excluded_paths = ['/api/auth/login/', '/api/auth/login', '/apis/', '/apis']
         try:
             if request.path in excluded_paths:
                 return True
