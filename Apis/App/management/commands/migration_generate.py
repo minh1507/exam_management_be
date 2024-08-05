@@ -4,7 +4,7 @@ class Command(BaseCommand):
     help = 'Generate migrations for the default app'
 
     def handle(self, *args, **kwargs):
-        app_name = 'App'  # Replace 'App' with your actual default app name
+        app_name = 'App'  
         try:
             from django.core.management import call_command
             call_command('makemigrations', app_name)
