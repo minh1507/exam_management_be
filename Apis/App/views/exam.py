@@ -80,5 +80,7 @@ class ExamView(
         if serializer.is_valid():
             serializer.save()
             data = serializer.data
+
+        print(serializer.errors)
         
         return ResponseCreateOne(data=data).to_response()  

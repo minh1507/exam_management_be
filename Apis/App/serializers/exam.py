@@ -10,22 +10,22 @@ from App.commons.message.key import KeyMessage
 from App.commons.util.string import StringUtil
 from .image import ImageSerializer
 
-class AnswerForQuestionSerializer(serializers.ModelSerializer):
+class AnswerForQuestionMakeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
         fields = ['id', 'content', "isResult"] 
 
-class QuestionSerializer(serializers.ModelSerializer):
+class QuestionExamMakeSerializer(serializers.ModelSerializer):
     subject = SubjectSerializer()
     image = ImageSerializer()
-    answers = AnswerForQuestionSerializer(many=True, read_only=True)
+    answers = AnswerForQuestionMakeSerializer(many=True, read_only=True)
     class Meta:
         model = Question
         fields = ('id', 'subject', 'lecturer', 'content', "mark", "unit", "mixChoices", "image", 'answers')
 
 class ExamSerializer(serializers.ModelSerializer):
     subject = SubjectSerializer()
-    questions = QuestionSerializer(many=True)
+    questions = QuestionExamMakeSerializer(many=True)
     class Meta:
         model = Exam
         fields = ('id', 'code', "subject", 'supervisor', 'expired_time', 
