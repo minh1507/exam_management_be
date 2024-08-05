@@ -60,7 +60,7 @@ class ExamView(
         return response.to_response()
     
     def create(self, request):
-        total = request.data['total_question']
+        total = int(request.data['total_question'])
         question = Question.objects.filter(deletedAt__isnull=True, subject__id=request.data["subject"]).order_by('?')
         random_questions = question[:total]
         question_ids = [str(question.id) for question in random_questions]
@@ -69,7 +69,7 @@ class ExamView(
         result["questions"] = question_ids
         result['expired_time'] = request.data['expired_time']
         result['start_time'] = request.data['start_time']
-        result['total_question'] = request.data['total_question']
+        result['total_question'] = int(request.data['total_question'])
         result['supervisor'] = request.data['supervisor']
         result['code'] = request.data['code']
         result['subject'] = request.data['subject']
