@@ -1,9 +1,7 @@
 from rest_framework import viewsets, mixins
 from App.models import Exam
-from App.models import Question
-from App.serializers import ExamSerializer, ExamCreateSerializer, ExamDeleteSerializer, ExamValidate
-import random
-from datetime import datetime
+from App.models import Question, Subject, question
+from App.serializers import ExamSerializer, ExamCreateSerializer, ExamDeleteSerializer, ExamValidate, ExamCreateManySerializer
 from App.commons.response import (
     ResponseReadMany, ResponseReadOne, ResponseCreateOne, ResponseDestroyOne, ResponseBadRequest
 )
@@ -62,45 +60,25 @@ class ExamView(
         return response.to_response()
     
     def create(self, request):
-        messages = ExamSerializer.run(request.data, 'create')
-        if len(messages) > 0:
-            return ResponseBadRequest(messages=messages).to_response()
-        response = ResponseCreateOne()
+        total = request.data['total_question']
+        question = Question.objects.filter(deletedAt__isnull=True, subject__id=request.data["subject"]).order_by('?')
+        random_questions = question[:total]
+        question_ids = [str(question.id) for question in random_questions]
 
-        serializer = ExamCreateSerializer(data=request.data)
+        result = dict()
+        result["questions"] = question_ids
+        result['expired_time'] = request.data['expired_time']
+        result['start_time'] = request.data['start_time']
+        result['total_question'] = request.data['total_question']
+        result['supervisor'] = request.data['supervisor']
+        result['code'] = request.data['code']
+        result['subject'] = request.data['subject']
 
-        sumOfQuestion = serializer.validated_data.get('sumQuestion')
-        if sumOfQuestion <= 0:
-            return ResponseBadRequest(messages="Sum of question must be greater than 0").to_response()
+        serializer = ExamCreateManySerializer(data=result)
 
-        listAllQuestion = Question.objects.filter(subject = serializer.validated_data.get('subject'))
-        listQuestion = []
-        numOfQuestion = len(listAllQuestion)
-        if sumOfQuestion < numOfQuestion:
-            numbers = random.sample(range(0, numOfQuestion-1), sumOfQuestion)
-            listQuestion = [listAllQuestion[i] for i in numbers]
-        else:
-            listQuestion = numOfQuestion
-
-        exam_data={
-            "code": serializer.validated_data.get('subject') + datetime.now(),
-            "subject": serializer.validated_data.get('subject'),
-            "supervisor": "",
-            "expiredTime": serializer.validated_data.get('expiredTime'),
-            "sumQuestion": serializer.validated_data.get('sumQuestion')
-        }
-        exam_serializer = ExamSerializer(data=exam_data)
-        exam_serializer.is_valid(raise_exception=True)
-        exam_serializer.save()
-
-        if exam_serializer.is_valid() and len(messages)==0:
-            newExam = exam_serializer.save()
-            newExam.questions.set(listQuestion)
-            response.data = serializer.data
-            response.toast = True
-        else:
-            response.messages = messages
-            response.status = ReponseEnum.BAD_REQUEST.value
-            response.toast = True
-            
-        return response.to_response()  
+        data = None
+        if serializer.is_valid():
+            serializer.save()
+            data = serializer.data
+        
+        return ResponseCreateOne(data=data).to_response()  
