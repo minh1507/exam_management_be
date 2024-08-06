@@ -16,6 +16,7 @@ djangorestframework-simplejwt = "*"
 django-redis = "*"
 drf-spectacular = "*"
 django-minio-backend = "*"
+python-docx = "*"
 
 [dev-packages]
 
