@@ -51,7 +51,7 @@ class QuestionCreateSerializer(serializers.ModelSerializer):
     image = serializers.PrimaryKeyRelatedField(queryset=Image.objects.all())
     class Meta:
         model = Question
-        fields = ['subject', 'lecturer', 'content', 'mark', 'unit', 'mixChoices', 'image']
+        fields = ['id','subject', 'lecturer', 'content', 'mark', 'unit', 'mixChoices', 'image']
 
     def create(self, validated_data):
         return Question.objects.create(**validated_data)

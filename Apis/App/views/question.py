@@ -47,8 +47,8 @@ class QuestionView(
         serializer = QuestionCreateSerializer(data=request.data)
 
         if serializer.is_valid() and len(messages)==0:
-            serializer.save()
-            response.data = serializer.data
+            result = serializer.save()
+            response.data = result.id
             response.toast = True
         else:
             response.messages = messages

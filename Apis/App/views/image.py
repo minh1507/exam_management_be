@@ -45,7 +45,6 @@ class ImageView(
     def create(self, request):
         response = ResponseCreateOne()
         file = request.data.get("file")
-        print(request.data)
 
         if not file:
             response.messages = ['Image file is required.']
