@@ -12,4 +12,5 @@ class Exam(Base):
     supervisor = models.CharField(max_length = 100, null = True)
     expired_time = models.DateTimeField( null=True)
     start_time = models.DateTimeField(null=True)
+    duration = models.IntegerField(null=False)
     total_question = models.IntegerField( null=True)

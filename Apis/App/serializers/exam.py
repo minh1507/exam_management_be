@@ -28,7 +28,7 @@ class ExamSerializer(serializers.ModelSerializer):
     questions = QuestionExamMakeSerializer(many=True)
     class Meta:
         model = Exam
-        fields = ('id', 'code', "subject", 'supervisor', 'expired_time', 
+        fields = ('id', 'code', "subject", 'supervisor', 'expired_time', 'duration',
                   'start_time','total_question', 'questions'
                   )
 class ExamDeleteSerializer(serializers.HyperlinkedModelSerializer):
@@ -64,7 +64,7 @@ class SubjectsSerializer(serializers.ModelSerializer):
 class ExamCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Exam
-        fields = ['subject', 'expired_time', 'start_time', 'total_question', 'supervisor', 'code']
+        fields = ['subject', 'duration', 'total_question', 'supervisor', 'code']
 
     def create(self, validated_data):
         return Exam.objects.create(**validated_data)
@@ -74,7 +74,7 @@ class ExamCreateManySerializer(serializers.ModelSerializer):
     subject = serializers.PrimaryKeyRelatedField(queryset=Subject.objects.all())
     class Meta:
         model = Exam
-        fields = ['questions', 'code', 'supervisor', 'expired_time', 'start_time', 'total_question', 'subject']
+        fields = ['questions', 'code', 'supervisor', 'duration', 'total_question', 'subject']
 
     def create(self, validated_data):
         questions_data = validated_data.pop('questions')

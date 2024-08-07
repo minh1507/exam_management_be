@@ -67,12 +67,11 @@ class ExamView(
 
         result = dict()
         result["questions"] = question_ids
-        result['expired_time'] = request.data['expired_time']
-        result['start_time'] = request.data['start_time']
         result['total_question'] = int(request.data['total_question'])
         result['supervisor'] = request.data['supervisor']
         result['code'] = request.data['code']
         result['subject'] = request.data['subject']
+        result['duration'] = request.data['duration']
 
         serializer = ExamCreateManySerializer(data=result)
 
